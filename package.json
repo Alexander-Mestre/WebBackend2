@@ -1,0 +1,24 @@
+{
+  "name": "webbackend2",
+  "version": "1.0.0",
+  "description": "Complete Node JS guide",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+    ,"prove01": "nodemon prove01.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alexander-Mestre/WebBackend2.git"
+  },
+  "author": "Alexander",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alexander-Mestre/WebBackend2/issues"
+  },
+  "homepage": "https://github.com/Alexander-Mestre/WebBackend2#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
