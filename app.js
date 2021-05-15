@@ -2,28 +2,55 @@ const path = require('path');
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const errorController = require('./controllers/error');
+const User = require('./models/user');
 
 const app = express();
 
-app.set('view engine', 'ejs'); //set up view engine
-app.set('views', 'views'); //where views are to be found
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-const adminData = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-const bookRoutes = require('./routes/books');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/admin', adminData.routes);
-app.use(shopRoutes);
-app.use('/books', bookRoutes.routes);
-
 app.use((req, res, next) => {
-  res.status(404).render('404', { pageTitle: 'Page Not Found' });
+  User.findById('60a02496ecff6530ccd75670')
+    .then(user => {
+      req.user = user;
+      next();
+    })
+    .catch(err => console.log(err));
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Our app is running on port ${ PORT }`);
-});
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+app.use(errorController.get404);
+
+mongoose
+  .connect(
+    'mongodb+srv://alexandermestre:Barcelona123@instance1project1.ytlxc.mongodb.net/tutorial?retryWrites=true&w=majority'
+  )
+  .then(result => {
+    User.findOne().then(user => {
+      if (!user) {
+        const user = new User({
+          name: 'Alexander',
+          email: 'Ax@test.com',
+          cart: {
+            items: []
+          }
+        });
+        user.save();
+      }
+    });
+    app.listen(5000);
+  })
+  .catch(err => {
+    console.log(err);
+  });
